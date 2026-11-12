@@ -17,6 +17,7 @@ last 400 characters of each output.
 |---|---|---|
 | `results/qwen35_0p8b_base.jsonl` | Qwen3.5-0.8B (text part), unedited | `b45d768ab90159d3cd241406b2b1feae2f83674bccd94b8bb3c990e33612af4c` |
 | `results/qwen35_0p8b_placebo.jsonl` | random columns, Gaussian noise at the edit's scale | `bd6cc63a92a345a69518ebd43886af649b37b24c7eb1cd1b87680eb7605b4b9c` |
+| `results/qwen35_0p8b_shuffled_placebo.jsonl` | the edit's own deltas shuffled within its own positions (added after the other arms) | `cccf6983f2d887c04a77407457822bd3e2f0c4467455e0d47aa1854db3c8ef63` |
 | `results/qwen35_0p8b_edited_p50c.jsonl` | the authors' published 50-pass edit | `c17be466d0cc30245755748e7168136c0b978d1ae7d84270228c3af33d4261fc` |
 | `results/gemma4_e2b_it_base.jsonl` | Gemma 4 E2B-it, unedited | `5d09544103b3b2302655a4214113f3138fda0dc49cae23a99d2183a9493a96e1` |
 
@@ -56,8 +57,9 @@ Both harnesses send temperature 0.6, top-p 0.95, top-k 20, presence penalty 1.5,
 one sample per problem. They are different implementations: the transformers harness applies its own presence-penalty
 processor and seeds each problem; the llama.cpp server applies its own penalty, may ignore top-k, and chooses its own seed.
 
-`build/make_shuffled_control.py` builds a second, structured placebo (the edit's own deltas, shuffled within the edit's
-own positions). It was added after the paper's runs; see the paper for whether its arm was evaluated.
+`build/make_shuffled_control.py` builds the second, structured placebo (the edit's own deltas, shuffled within the edit's
+own positions, seed 20261111; checkpoint sha256 `cf306d6574fc9c88c5a39061d284985a2298c74aad57bfd9baaed7c6a95bc5c6`).
+It was run after the other arms were known, with the same harness and settings: 734 min on the RTX 2060.
 
 **Changes from the scripts as run:** machine-specific absolute paths were replaced with the environment variables and
 relative paths above; nothing else. `ORIGINAL_SCRIPTS.sha256` lists each script's hash as it ran.
